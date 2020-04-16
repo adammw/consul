@@ -30,8 +30,8 @@ load helpers
    assert_upstream_has_endpoints_in_status 127.0.0.1:20000 s2 HEALTHY 1
 }
 
-@test "ingress should be able to connect to s1 via configured path" {
-  run retry_default curl -s -H"Host: router.example.consul" -f localhost:9999/s1/debug?env=dump
+@test "ingress should be able to connect to s1 using Host header" {
+  run retry_default curl -H"Host: s1.example.consul" -s -f localhost:9999/debug?env=dump
   [ "$status" -eq 0 ]
 
   GOT=$(echo "$output" | grep -E "^FORTIO_NAME=")
@@ -43,8 +43,8 @@ load helpers
   fi
 }
 
-@test "ingress should be able to connect to s2 via configured path" {
-  run retry_default curl -s -H"Host: router.example.consul" -f localhost:9999/s2/debug?env=dump
+@test "ingress should be able to connect to s2 using Host header" {
+  run retry_default curl -H"Host: s2.example.consul" -s -f localhost:9999/debug?env=dump
   [ "$status" -eq 0 ]
 
   GOT=$(echo "$output" | grep -E "^FORTIO_NAME=")
